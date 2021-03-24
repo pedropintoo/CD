@@ -1,6 +1,5 @@
 """Tests for the chat protocol."""
 import pytest
-import mock
 from src.protocol import (
     CDProto,
     TextMessage,
