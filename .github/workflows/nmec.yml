@@ -14,6 +14,7 @@ jobs:
         uses: andstor/file-existence-action@v1
         with:
           files: "NMEC.txt"
+          allow_failure: true
 
       - name: File exists
         if: steps.check_files.outputs.files_exists == 'true'
