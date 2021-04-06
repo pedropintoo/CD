@@ -134,6 +134,7 @@ def test_get_remote(client):
 =======
 =======
 import pexpect
+import time
 
 TIMEOUT = 2
 
