@@ -40,11 +40,15 @@ jobs:
   moss:
     name: Check my code for plagiarism
 <<<<<<< HEAD
+<<<<<<< HEAD
     runs-on: ubuntu-jammy
 >>>>>>> b635b34 (simpler curl 4)
 =======
     runs-on: ubuntu-22.04
 >>>>>>> f8609fd (simpler curl 5)
+=======
+    runs-on: ubuntu-latest
+>>>>>>> 6fda182 (simpler curl 6)
 
     steps:
       - name: Checkout
