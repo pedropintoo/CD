@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Load Balancer
 
 Very simples HTTP/TCP Load Balancer.
@@ -87,6 +88,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 >>>>>>> b7420fd (add deadline)
 =======
 >>>>>>> 9ed63b6 (Initial commit)
+=======
+>>>>>>> 0c4fd63 (add deadline)
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/EhIYAyWc)
 >>>>>>> 2332a21 (add deadline)
 ## Tests:
@@ -133,6 +136,8 @@ note left of Consumer: Doesn't receive last message
 =======
 =======
 >>>>>>> 6c5ad68 (Initial commit)
+=======
+>>>>>>> 9264b44 (add deadline)
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/YQHnUjoB)
 >>>>>>> 4a055c8 (add deadline)
 # CHORD (DHT)
@@ -174,6 +179,9 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 =======
 =======
 =======
+=======
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/EB7yh-Hm)
+>>>>>>> 80cebca (add deadline)
 # cd_chat_server
 
 This is a template repository for Computação Distribuida assignment 1
