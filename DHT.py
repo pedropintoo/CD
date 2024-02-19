@@ -14,15 +14,16 @@ def main(number_nodes, timeout):
     dht = []
     # initial node on DHT
     node = DHTNode(("localhost", 5000))
-    node.start()
+    node.start() # start function run()
     dht.append(node)
     logger.info(node)
 
     for i in range(number_nodes - 1):
         time.sleep(0.2)
-        # Create DHT_Node threads on ports 5001++ and with initial DHT_Node on port 5000
+        # Create DHT_Node threads on ports 5001++ 
+        # DHT_Node on port 5000 is the initial node !!
         node = DHTNode(("localhost", 5001 + i), ("localhost", 5000), timeout)
-        node.start()
+        node.start() # thread start
         dht.append(node)
         logger.info(node)
 
@@ -31,7 +32,7 @@ def main(number_nodes, timeout):
 
     # Await for all nodes to stop
     for node in dht:
-        node.join()
+        node.join() # thread waiting
 
 
 if __name__ == "__main__":

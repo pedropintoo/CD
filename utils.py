@@ -42,5 +42,7 @@ def dht_hash(text, seed=0, maximum=2**10):
 def contains(begin, end, node):
     """Check node is contained between begin and end in a ring."""
     #TODO
+    if (begin < node <= end): return True
+    if (begin > end and (node > begin or node <= end)): return True
     return False
 >>>>>>> cecd2bc (Initial commit)
