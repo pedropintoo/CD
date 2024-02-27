@@ -1,7 +1,6 @@
 import pytest
 from unittest.mock import patch
 from mock import MagicMock
-from mockselector.selector import MockSocket, ListenSocket, MockSelector
 
 from src.server import Server
 
@@ -12,22 +11,18 @@ class CDProtoException(Exception):
 
 def test_server():
     """Test that the server used CDProto methods."""
-    c1 = MockSocket([b""])
-    s = ListenSocket((c1,))
-    s.setsockopt = MagicMock()
-    sel = MockSelector([s, c1])
 
     def fail(s):
         raise CDProtoException()
 
-    with patch("socket.socket") as socket, patch(
-        "selectors.DefaultSelector"
-    ) as selector, patch("src.protocol.CDProto.recv_msg", new=fail):
-        socket.return_value = s
-        selector.return_value = sel
+    with patch("socket.socket") as mock_socket, patch(
+        "selectors.DefaultSelector.select", side_effect=CDProtoException
+    ) as mock_selector, patch("selectors.DefaultSelector.register", side_effect=MagicMock) as mock_register:
+        s = Server()
 
-        with sel:
-            s = Server()
+        with pytest.raises(CDProtoException):
+            s.loop()
 
-            with pytest.raises(CDProtoException):
-                s.loop()
+        assert mock_socket.call_count == 1
+        assert mock_selector.call_count == 1
+        assert mock_register.call_count == 1
