@@ -14,14 +14,17 @@ class Message:
     """Message Type."""
     
     def __init__(self, command: str):
-        self.command = command
+        self.data = {"command":command}
+
+    def __repr__(self):
+        return json.dumps(self.data)
     
 class JoinMessage(Message):
     """Message to join a chat channel."""
 
     def __init__(self, channel: str):
         super().__init__("join")
-        self.channel = channel
+        self.data["channel"] = channel
 
 
 class RegisterMessage(Message):
@@ -29,17 +32,16 @@ class RegisterMessage(Message):
 
     def __init__(self, username: str):
         super().__init__("register")
-        self.user = username
+        self.data["user"] = username
     
 class TextMessage(Message):
     """Message to chat with other clients."""
 
     def __init__(self, message: str, channel: str):
         super().__init__("message")
-        self.message = message
-        self.channel = channel
-        self.ts = int(round(datetime.now().timestamp())) # Integer timestamp of current datetime
-
+        self.data["message"] = message
+        self.data["channel"] = channel
+        self.data["ts"] = int(round(datetime.now().timestamp())) # Integer timestamp of current datetime
 
 class CDProto:
     """Computação Distribuida Protocol."""
@@ -62,15 +64,30 @@ class CDProto:
     @classmethod
     def send_msg(cls, connection: socket, msg: Message):
         """Sends through a connection a Message object."""
-        # Algorithm to send json
-        connection.send(b"Ola")
+        # Algorithm to send the length
+        connection.send(repr(msg).encode('utf-8'))
 
     @classmethod
     def recv_msg(cls, connection: socket) -> Message:
         """Receives through a connection a Message object."""
         # Algorithm to check length...
         # generate the correct message
-        return connection.recv(1024)
+        
+        received = connection.recv(1024).decode('utf-8')
+        
+        # decoding JSON to Message
+        data = json.loads(received)
+        command = data["command"]
+
+        if command == "join":
+            return JoinMessage(data["channel"])
+        elif command == "register":
+            return RegisterMessage(data["user"])
+        elif command == "message":
+            return TextMessage(data["message"],data["channel"])
+        else:
+            # ERROR!
+            return None
 
 
 class CDProtoBadFormat(Exception):

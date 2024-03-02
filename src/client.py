@@ -43,9 +43,10 @@ class Client:
         # Handler for Input
         self.sel.register(sys.stdin, selectors.EVENT_READ, self.handle_input_message)
 
-
     def loop(self):
         """Loop indefinitely."""
+        print(">",end="")
+        sys.stdout.flush()
         while True:
             # Wait for events
             events = self.sel.select()
@@ -65,6 +66,7 @@ class Client:
 
     def handle_receive_message(self, sock, mask):
         message = CDProto.recv_msg(sock)
-        print("<"+message)
+        if message.data["command"] == "message":
+            print("\n< "+message.data["message"]+"\n>",end="")
             
             

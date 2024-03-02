@@ -67,4 +67,6 @@ class Server:
     def handle_receive_message(self, sock, mask):
         message = CDProto.recv_msg(sock)
         # Decide to whom we should send the message...
-        print(message)
+        if message.data["command"] == "message":
+            for client_socket in self.channels["main"]:
+                CDProto.send_msg(client_socket, message)
