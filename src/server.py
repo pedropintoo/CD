@@ -46,7 +46,7 @@ class Server:
         
         # Start the selector
         self.sel = selectors.DefaultSelector()
-        self.sel.register(self.s, selectors.EVENT_READ, self.accept)
+        self.sel.register(self.sock, selectors.EVENT_READ, self.accept)
         
         while True:
             events = self.sel.select()
