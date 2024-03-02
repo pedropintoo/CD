@@ -4,4 +4,4 @@ if __name__ == "__main__":
     c = Client("Bar")
     c.connect()
     
-    c.loop()
+    c.loop() # com input
