@@ -37,4 +37,4 @@ class Client:
             
             # receive the response
             data = self.sock.recv(1024)
-            print(data)
+            print("<"+data.decode('utf-8'))

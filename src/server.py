@@ -16,7 +16,6 @@ PORT = 8888 # arbitrary non-privileged port
 
 sel = selectors.DefaultSelector()
 
-
 def accept(sock, mask):
     conn, addr = sock.accept()  # Should be ready
     print('accepted from:', addr)
@@ -27,7 +26,6 @@ def accept(sock, mask):
 def read(conn, mask):
     data = conn.recv(1000)  # Should be ready
     if data:
-        print('echoing')
         conn.send(data)  # Hope it won't block
     else:
         print('closing')
