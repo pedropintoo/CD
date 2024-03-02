@@ -62,14 +62,14 @@ class CDProto:
     @classmethod
     def send_msg(cls, connection: socket, msg: Message):
         """Sends through a connection a Message object."""
-        # Algorithm to send by groups...
+        # Algorithm to send json
         connection.send(b"Ola")
-
 
     @classmethod
     def recv_msg(cls, connection: socket) -> Message:
         """Receives through a connection a Message object."""
         # Algorithm to check length...
+        # generate the correct message
         return connection.recv(1024)
 
 
