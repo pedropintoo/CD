@@ -26,22 +26,28 @@ class CDProto:
     @classmethod
     def register(cls, username: str) -> RegisterMessage:
         """Creates a RegisterMessage object."""
+        return RegisterMessage(None)
 
     @classmethod
     def join(cls, channel: str) -> JoinMessage:
         """Creates a JoinMessage object."""
+        return JoinMessage(None)
 
     @classmethod
-    def message(cls, message: str, channel: str = None) -> TextMessage:
+    def message(cls, message:str , channel: str = None) -> TextMessage:
         """Creates a TextMessage object."""
 
     @classmethod
     def send_msg(cls, connection: socket, msg: Message):
         """Sends through a connection a Message object."""
+        connection.send(msg)
+
 
     @classmethod
     def recv_msg(cls, connection: socket) -> Message:
         """Receives through a connection a Message object."""
+        # Algorithm to check length...
+        return connection.recv(1024)
 
 
 class CDProtoBadFormat(Exception):
