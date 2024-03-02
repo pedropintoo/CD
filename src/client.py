@@ -20,21 +20,21 @@ class Client:
 
     def __init__(self, name: str = "Foo"):
         """Initializes chat client."""
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def connect(self):
         """Connect to chat server and setup stdin flags."""
-        self.s.connect((SERVER,PORT)) # connect to server (block until accepted)
+        self.sock.connect((SERVER,PORT)) # connect to server (block until accepted)
         self.loop()
         # Miss stdin flags
 
     def loop(self):
-        """Loop indefinetely."""
+        """Loop indefinitely."""
         while (True):
             # send some data
             str_send = input(">")
-            self.s.send(str_send.encode("utf-8"))
+            self.sock.send(str_send.encode("utf-8"))
             
             # receive the response
-            data = self.s.recv(1024)
+            data = self.sock.recv(1024)
             print(data)
