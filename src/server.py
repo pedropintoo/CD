@@ -14,24 +14,28 @@ logging.basicConfig(filename="server.log", level=logging.DEBUG)
 HOST = '' # symbolic name meaning all available interfaces
 PORT = 8888 # arbitrary non-privileged port
 
+sel = selectors.DefaultSelector()
+
+
+def accept(sock, mask):
+    conn, addr = sock.accept()  # Should be ready
+    print('accepted from:', addr)
+    conn.setblocking(False)
+    sel.register(conn, mask, read)
+
+
+def read(conn, mask):
+    data = conn.recv(1000)  # Should be ready
+    if data:
+        print('echoing')
+        conn.send(data)  # Hope it won't block
+    else:
+        print('closing')
+        sel.unregister(conn)
+        conn.close()
+
 class Server:
     """Chat Server process."""
-
-    def accept(self):
-        conn, addr = self.sock.accept()  # Should be ready
-        print('accepted from:', addr)
-        conn.setblocking(False)
-        self.sel.register(conn, selectors.EVENT_READ, self.read)
-
-    def read(self, conn):
-        data = conn.recv(1000)  # Should be ready
-        if data:
-            print('echoing')
-            conn.send(data)  # Hope it won't block
-        else:
-            print('closing')
-            self.sel.unregister(conn)
-            conn.close()
 
     def loop(self):
         """Loop indefinitely."""
@@ -45,11 +49,10 @@ class Server:
         self.sock.setblocking(False)
         
         # Start the selector
-        self.sel = selectors.DefaultSelector()
-        self.sel.register(self.sock, selectors.EVENT_READ, self.accept)
+        sel.register(self.sock, selectors.EVENT_READ, accept)
         
         while True:
-            events = self.sel.select()
+            events = sel.select()
             for key, mask in events:
                 callback = key.data
                 callback(key.fileobj, mask)
