@@ -31,7 +31,7 @@ class Server:
         sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) # Reuse address
         sock.bind((HOST,PORT)) # bind to port on this machine
         sock.listen(100)
-        sock.setblocking(False)
+        #sock.setblocking(False)
 
         # Start the selector
         self.sel = selectors.DefaultSelector()
@@ -55,7 +55,7 @@ class Server:
         conn, addr = sock.accept()
         print('accepted from:', addr)
         # Client socket
-        conn.setblocking(False)
+        #conn.setblocking(False)
         # Receive Register Message from client     
         message = CDProto.recv_msg(conn)
 

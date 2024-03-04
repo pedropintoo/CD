@@ -41,12 +41,12 @@ class Client:
         self.sel.register(self.sock, selectors.EVENT_READ, self.handle_receive_message)
         
         # Handler for Input
+        print(">",end="")
+        sys.stdout.flush()
         self.sel.register(sys.stdin, selectors.EVENT_READ, self.handle_input_message)
 
     def loop(self):
         """Loop indefinitely."""
-        print(">",end="")
-        sys.stdout.flush()
         while True:
             # Wait for events
             events = self.sel.select()

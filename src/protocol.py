@@ -65,6 +65,7 @@ class CDProto:
     def send_msg(cls, connection: socket, msg: Message):
         """Sends through a connection a Message object."""
         # Algorithm to send the length
+        to_send = repr(msg).encode('utf-8')
         connection.send(repr(msg).encode('utf-8'))
 
     @classmethod
