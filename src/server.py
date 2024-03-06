@@ -60,6 +60,7 @@ class Server:
         conn.setblocking(False)
         # Receive Register Message from client     
         message = CDProto.recv_msg(conn)
+        logging.debug('received "%s', message)
 
         self.channels[DEFAULT_CHANNEL].append(conn)
 
@@ -71,6 +72,7 @@ class Server:
         
 
         message = CDProto.recv_msg(sock)
+        logging.debug('received "%s', message)
         # Decide to whom we should send the message...
 
         if message == None : # Client disconnect
@@ -88,6 +90,7 @@ class Server:
             self.channels.setdefault(message.data["channel"], []).append(sock)
         else:
             for client_socket in self.channels[message.data["channel"]]:
+                logging.debug('sended "%s', message)
                 CDProto.send_msg(client_socket, message)
 
 

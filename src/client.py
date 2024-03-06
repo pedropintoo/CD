@@ -81,11 +81,13 @@ class Client:
             # Text message
             message = CDProto.message(str_send,self.channel)
 
+        logging.debug('sended "%s', message)
         CDProto.send_msg(self.sock, message) 
 
     def handle_receive_message(self, sock, mask):
         message = CDProto.recv_msg(sock)
         if (message != None) and (message.data["command"]) == "message":
+            logging.debug('received "%s', message)
             print("\n< "+message.data["message"]+"\n>",end="")
             
             
