@@ -7,12 +7,19 @@
 
 import logging
 import sys
+import fcntl
+import os
 import socket
 import selectors
 
 from .protocol import CDProto, CDProtoBadFormat
 
 logging.basicConfig(filename=f"{sys.argv[0]}.log", level=logging.DEBUG)
+
+
+# set sys.stdin non-blocking
+orig_fl = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
+fcntl.fcntl(sys.stdin, fcntl.F_SETFL, orig_fl | os.O_NONBLOCK)
 
 SERVER = "127.0.0.1" # localhost
 PORT = 8888 # server port
@@ -46,6 +53,8 @@ class Client:
 
     def loop(self):
         """Loop indefinitely."""
+        sys.stdout.write(">")
+        sys.stdout.flush()
         while True:
             # Wait for events
             events = self.sel.select()
@@ -58,7 +67,7 @@ class Client:
 
     def handle_input_message(self, stdin, mask):
         # Blocked until input is done        
-        str_send = input("").strip()
+        str_send = input(">").strip()
 
         if str_send[0:5] == "/join":
             # Join message
@@ -77,6 +86,6 @@ class Client:
     def handle_receive_message(self, sock, mask):
         message = CDProto.recv_msg(sock)
         if (message != None) and (message.data["command"]) == "message":
-            print(message.data["message"])
+            print("\n< "+message.data["message"]+"\n>",end="")
             
             
