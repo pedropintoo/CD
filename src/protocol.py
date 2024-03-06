@@ -26,7 +26,6 @@ class JoinMessage(Message):
         super().__init__("join")
         self.data["channel"] = channel
 
-
 class RegisterMessage(Message):
     """Message to register username in the server."""
 
@@ -40,7 +39,8 @@ class TextMessage(Message):
     def __init__(self, message: str, channel: str):
         super().__init__("message")
         self.data["message"] = message
-        self.data["channel"] = channel
+        if channel != None:
+            self.data["channel"] = channel
         self.data["ts"] = int(round(datetime.now().timestamp())) # Integer timestamp of current datetime
 
 class CDProto:
@@ -64,31 +64,43 @@ class CDProto:
     @classmethod
     def send_msg(cls, connection: socket, msg: Message):
         """Sends through a connection a Message object."""
-        # Algorithm to send the length
-        to_send = repr(msg).encode('utf-8')
-        connection.send(repr(msg).encode('utf-8'))
+        
+        # Object message -> Json -> Bytes
+        message = repr(msg).encode('utf-8')
+
+        # Create a header with the length
+        header = len(message).to_bytes(2, byteorder='big')
+
+        # Send through the connection
+        connection.send(header + message)
 
     @classmethod
     def recv_msg(cls, connection: socket) -> Message:
         """Receives through a connection a Message object."""
-        # Algorithm to check length...
-        # generate the correct message
         
-        received = connection.recv(1024).decode('utf-8')
+        # Receive message size
+        size = int.from_bytes(connection.recv(2),'big')
+
+        if (size == 0): return None # Client disconnect
         
-        # decoding JSON to Message
-        data = json.loads(received)
-        command = data["command"]
+        received = connection.recv(size).decode('utf-8')
+        
+        try:
+            # decoding JSON to Message
+            data = json.loads(received) 
+        except Exception:
+            raise CDProtoBadFormat(received) 
+
+        command = data.get("command") 
 
         if command == "join":
             return JoinMessage(data["channel"])
         elif command == "register":
             return RegisterMessage(data["user"])
         elif command == "message":
-            return TextMessage(data["message"],data["channel"])
+            return TextMessage(data["message"],data.get("channel"))
         else:
-            # ERROR!
-            return None
+            raise CDProtoBadFormat(received)  
 
 
 class CDProtoBadFormat(Exception):

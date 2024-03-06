@@ -16,6 +16,8 @@ logging.basicConfig(filename="server.log", level=logging.DEBUG)
 HOST = '' # symbolic name meaning all available interfaces
 PORT = 8888 # arbitrary non-privileged port
 
+DEFAULT_CHANNEL = "main"
+
 class Server:
     """Chat Server process."""
 
@@ -23,7 +25,7 @@ class Server:
         """Initializes chat server."""
         
         # Channels data structure
-        self.channels = {"main" : []}
+        self.channels = {DEFAULT_CHANNEL : []}
 
         # Create the server Socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,7 +33,7 @@ class Server:
         sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) # Reuse address
         sock.bind((HOST,PORT)) # bind to port on this machine
         sock.listen(100)
-        #sock.setblocking(False)
+        sock.setblocking(False)
 
         # Start the selector
         self.sel = selectors.DefaultSelector()
@@ -55,18 +57,43 @@ class Server:
         conn, addr = sock.accept()
         print('accepted from:', addr)
         # Client socket
-        #conn.setblocking(False)
+        conn.setblocking(False)
         # Receive Register Message from client     
         message = CDProto.recv_msg(conn)
 
-        self.channels["main"].append(conn)
+        self.channels[DEFAULT_CHANNEL].append(conn)
 
         # Handle future data from this client  
         self.sel.register(conn, mask, self.handle_receive_message)    
 
     def handle_receive_message(self, sock, mask):
+        """Handle new received message."""
+        
+
         message = CDProto.recv_msg(sock)
         # Decide to whom we should send the message...
-        if message.data["command"] == "message":
-            for client_socket in self.channels["main"]:
+
+        if message == None : # Client disconnect
+            # Remove from channels
+            self.remove_client_from_channels(sock)
+            
+            # End connections
+            self.sel.unregister(sock)
+            sock.close()
+        elif message.data["command"] == "join":
+            # Remove from channels
+            self.remove_client_from_channels(sock)   
+
+            # Add socket to the channel
+            self.channels.setdefault(message.data["channel"], []).append(sock)
+        else:
+            for client_socket in self.channels[message.data["channel"]]:
                 CDProto.send_msg(client_socket, message)
+
+
+    ############## Auxiliary ##############
+
+    def remove_client_from_channels(self, sock):
+        for values in self.channels.values():
+            if sock in values:
+                values.remove(sock)

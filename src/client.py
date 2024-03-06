@@ -23,6 +23,7 @@ class Client:
     def __init__(self, name: str = "Foo"):
         """Initializes chat client."""
         self.username = name
+        self.channel = "main"
 
         # Start the selector
         self.sel = selectors.DefaultSelector()
@@ -41,8 +42,6 @@ class Client:
         self.sel.register(self.sock, selectors.EVENT_READ, self.handle_receive_message)
         
         # Handler for Input
-        print(">",end="")
-        sys.stdout.flush()
         self.sel.register(sys.stdin, selectors.EVENT_READ, self.handle_input_message)
 
     def loop(self):
@@ -58,15 +57,26 @@ class Client:
     ############## Handlers ##############    
 
     def handle_input_message(self, stdin, mask):
-        # Blocked until input is done
-        str_send = input(">")
-        # Send message (EXAMPLE - textMessage)
-        textMessage = CDProto.message(str_send)       
-        CDProto.send_msg(self.sock, textMessage) 
+        # Blocked until input is done        
+        str_send = input("").strip()
+
+        if str_send[0:5] == "/join":
+            # Join message
+            self.channel = str_send[6:].strip()
+            message = CDProto.join(self.channel)
+        elif str_send == "exit":
+            # Exit message
+            socket.close()
+            sys.exit(1)
+        else:
+            # Text message
+            message = CDProto.message(str_send,self.channel)
+
+        CDProto.send_msg(self.sock, message) 
 
     def handle_receive_message(self, sock, mask):
         message = CDProto.recv_msg(sock)
-        if message.data["command"] == "message":
-            print("\n< "+message.data["message"]+"\n>",end="")
+        if (message != None) and (message.data["command"]) == "message":
+            print(message.data["message"])
             
             
