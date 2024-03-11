@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # coding: utf-8
 
 import time
@@ -26,3 +27,20 @@ def bailey_pi_precision(precision=10):
         pi += 1.0/p16 * (4.0/(8*k + 1) - 2.0/(8*k + 4) - 1.0/(8*k + 5) - 1.0/(8*k+6));
         p16 *= 16;
     return pi
+=======
+def dht_hash(text, seed=0, maximum=2**10):
+    """ FNV-1a Hash Function. """
+    fnv_prime = 16777619
+    offset_basis = 2166136261
+    h = offset_basis + seed
+    for char in text:
+        h = h ^ ord(char)
+        h = h * fnv_prime
+    return h % maximum
+
+
+def contains(begin, end, node):
+    """Check node is contained between begin and end in a ring."""
+    #TODO
+    return False
+>>>>>>> cecd2bc (Initial commit)

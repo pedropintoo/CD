@@ -15,7 +15,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Python 3.9
+<<<<<<< HEAD
         uses: actions/setup-python@v2
+=======
+        uses: actions/setup-python@v4
+>>>>>>> dca85de (Initial commit)
         with:
           python-version: 3.9
 
@@ -24,11 +28,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+<<<<<<< HEAD
 
       - name: Test with pytest
         timeout-minutes: 2
         run: |
           pytest -vv --timeout=20
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 
@@ -69,3 +75,28 @@ jobs:
           retention-days: 1
 =======
 >>>>>>> 4333182 (Initial commit)
+=======
+=======
+      
+      - name: Launch DHT into background
+        run: |
+          python3 DHT.py --savelog &
+          PID=$!
+          sleep 1
+          ps -p $PID > /dev/null
+
+      - name: Test with pytest
+        timeout-minutes: 3 
+        run: |
+          sleep 15 
+          pytest
+
+      - name: DHT Logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: DHT logs
+          path: dht.txt
+          retention-days: 1
+>>>>>>> dca85de (Initial commit)
+>>>>>>> cecd2bc (Initial commit)

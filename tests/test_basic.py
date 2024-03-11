@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """Test simple consumer/producer interaction."""
 import json
 import pickle
@@ -98,3 +99,33 @@ def test_broker(producer_JSON, broker):
     assert broker.list_topics() == [TOPIC]
 
     assert broker.get_topic(TOPIC) == producer_JSON.produced[-1]
+=======
+"""Tests two clients."""
+import pytest
+from DHTClient import DHTClient
+
+
+@pytest.fixture()
+def client():
+    return DHTClient(("localhost", 5000))
+
+
+def test_put_local(client):
+    """ add object to DHT (this key is in first node -> local search) """
+    assert client.put("A", [0, 1, 2])
+
+
+def test_get_local(client):
+    """ retrieve from DHT (this key is in first node -> local search) """
+    assert client.get("A") == [0, 1, 2]
+
+
+def test_put_remote(client):
+    """ add object to DHT (this key is not on the first node -> remote search) """
+    assert client.put("2", ("xpto"))
+
+
+def test_get_remote(client):
+    """ retrieve from DHT (this key is not on the first node -> remote search) """
+    assert client.get("2") == "xpto"
+>>>>>>> dca85de (Initial commit)

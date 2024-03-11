@@ -1,6 +1,17 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 Flask>=1.0.2
 =======
 >>>>>>> 4333182 (Initial commit)
+=======
+>>>>>>> cecd2bc (Initial commit)
 pytest
 pytest-timeout
+=======
+pytest-reportlog
+mockselector
+mock
+pytest
+freezegun
+pexpect
+>>>>>>> dca85de (Initial commit)

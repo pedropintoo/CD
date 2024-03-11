@@ -12,7 +12,11 @@ jobs:
 
       - name: Check file existence
         id: check_files
+<<<<<<< HEAD
         uses: andstor/file-existence-action@v1
+=======
+        uses: andstor/file-existence-action@v2
+>>>>>>> dca85de (Initial commit)
         with:
           files: "NMEC.txt"
           allow_failure: true
@@ -32,15 +36,28 @@ jobs:
 
       - name: Zip Folder
 <<<<<<< HEAD
+<<<<<<< HEAD
         run: zip -r ${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "tests/*" "static/*" "templates/*" "*.md" LICENSE .gitignore
       
       - name: curl
         run: |
           curl --fail -F committer=${{ github.event.sender.login }} -F zip=@${{ github.event.repository.name }}.zip https://moss.av.it.pt/guiao4/upload
 =======
+=======
+>>>>>>> cecd2bc (Initial commit)
         run: zip -r ${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "tests/*" "*.md" LICENSE .gitignore
       
       - name: curl
         run: |
           curl --fail -F committer=${{ github.event.sender.login }} -F zip=@${{ github.event.repository.name }}.zip https://moss.av.it.pt/guiao3/upload
+<<<<<<< HEAD
 >>>>>>> 4333182 (Initial commit)
+=======
+=======
+        run: zip -r ${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "tests/*" "*.txt" "*.md" LICENSE .gitignore && zip -u ${{ github.event.repository.name }}.zip NMEC.txt
+      
+      - name: curl
+        run: |
+          curl --fail -F committer=${{ github.event.sender.login }} -F zip=@${{ github.event.repository.name }}.zip https://moss.av.it.pt/guiao2/upload
+>>>>>>> dca85de (Initial commit)
+>>>>>>> cecd2bc (Initial commit)
