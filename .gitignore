@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 # PID
 *.pid
 
 # idea
 .idea/
+=======
+.idea
+>>>>>>> 4333182 (Initial commit)
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

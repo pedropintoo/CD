@@ -1,3 +1,6 @@
+<<<<<<< HEAD
 Flask>=1.0.2
+=======
+>>>>>>> 4333182 (Initial commit)
 pytest
 pytest-timeout
