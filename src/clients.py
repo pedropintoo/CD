@@ -12,6 +12,7 @@ class Consumer:
         self.queue = queue_type(f"{topic}", _type=MiddlewareType.CONSUMER)
         self.logger = get_logger(f"Consumer {topic}")
         self.received = []
+        print(self.topic)
 
     def run(self, events=10):
         """Consume at most <events> events."""
@@ -44,5 +45,5 @@ class Producer:
             for queue, value in zip(self.queue, self.gen()):
                 queue.push(value)
                 self.logger.info("%s: %s", queue.topic, value)
-
+                print(value)
                 self.produced.append(value)
