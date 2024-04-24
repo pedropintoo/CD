@@ -65,11 +65,7 @@ class Broker:
             self.subscribers[topic] = []
             self.lastValues[topic] = None
 
-        for sub_topic in self.subscribers.keys():
-            if sub_topic.startswith(topic):
-                self.subscribers[sub_topic].append((address, _format)) 
-
-        print(str(self.subscribers))                   
+        self.subscribers[topic].append((address, _format))               
 
     def unsubscribe(self, topic, address):
         """Unsubscribe to topic by client in address."""
