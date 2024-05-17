@@ -5,6 +5,7 @@ import selectors
 import signal
 import logging
 import argparse
+import time
 
 # configure logger output format
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',datefmt='%m-%d %H:%M:%S')
@@ -43,9 +44,15 @@ class N2One:
 class RoundRobin:
     def __init__(self, servers):
         self.servers = servers
+        self.actual_index = -1
+        self.number_of_servers = len(servers)
 
     def select_server(self):
-        pass
+        # Each request is sent to the next server in the list. Once it reaches the last one, it returns to the first.
+        # We'll use arithmetical modulo to achieve this.
+        self.actual_index = (self.actual_index + 1) % self.number_of_servers 
+        server = self.servers[self.actual_index]
+        return server
     
     def update(self, *arg):
         pass
@@ -55,24 +62,65 @@ class RoundRobin:
 class LeastConnections:
     def __init__(self, servers):
         self.servers = servers
+        self.connections = {server: 0 for server in servers} # dictionary to keep track of the number of active connections for each server
 
     def select_server(self):
-        pass
+        # Selects the next server that currently has the fewest active connections.
+        server = min(self.connections, key=self.connections.get)
+        self.connections[server] += 1 # increment the number of active connections for the selected server
+        return server
 
     def update(self, *arg):
-        pass
+        if len(arg) < 1:
+            raise ValueError("No server specified for update")
+    
+        # decrement the active connection count for the given server because the connection has been closed.
+        server = arg[0]
+        if self.connections[server] > 0:
+            self.connections[server] -= 1  
 
 
 # least response time
 class LeastResponseTime:
     def __init__(self, servers):
         self.servers = servers
+        
+        # Dictionary to keep track of the average response time for each server
+        self.average_response = {server: 0 for server in servers}
+        
+        # Dictionary to keep track of the initial time request for each server
+        self.initial_time_request = {server: 0 for server in servers}
+        
+        # To keep track of the response times
+        self.response_times = {server: [] for server in servers}
+
 
     def select_server(self):
-        pass
+        current_time = time.time()
+        # Adjust the average response time dynamically based on the time elapsed since the last request
+        for server in self.servers:
+            elapsed_time = self.initial_time_request[server] - current_time
+            self.average_response[server] = (sum(self.response_times[server]) + elapsed_time) / (len(self.response_times[server]) + 1)
+        
+        # Find the server with the minimum adjusted average response time
+        server = min(self.average_response, key=self.average_response.get)
+        self.initial_time_request[server] = time.time()  # Update the initial time for the chosen server
+        return server
 
     def update(self, *arg):
-        pass
+        # Updates the average response time for the given server.
+        if len(arg) < 1:
+            raise ValueError("No server specified for update")
+
+        server = arg[0]
+        
+        # Calculates the new response time
+        response_time = time.time() - self.initial_time_request[server]
+        self.response_times[server].append(response_time)  # Add the response time to the list
+
+        # Update count and calculate new average response time
+        count = len(self.response_times[server])
+        self.average_response[server] = sum(self.response_times[server]) / count
 
 
 POLICIES = {
