@@ -1,3 +1,4 @@
+<<<<<<< HEAD:README.md
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -180,6 +181,12 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 =======
 =======
 =======
+=======
+# 2ano/2semestre/CD/CD-guiao-1
+
+# Nota: 20
+
+>>>>>>> ca7da8b (2ano/2semestre/CD):Praticas/guiao-1/README.md
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/EB7yh-Hm)
 >>>>>>> 80cebca (add deadline)
 # cd_chat_server
